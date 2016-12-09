@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.starktech.stsexamtest;
+package com.starktech.endpoint;
 
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -32,14 +32,14 @@ public class CandidateResource {
     }
 
     /**
-     * Retrieves representation of an instance of com.starktech.stsexamtest.CandidateResource
+     * Retrieves representation of an instance of com.starktech.endpoint.CandidateResource
      * @return an instance of java.lang.String
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getJson() {
         //TODO return proper representation object
-        return "You got the resource"; 
+        throw new UnsupportedOperationException();
     }
 
     /**
