@@ -31,7 +31,7 @@ public class Main {
                     .newGlassFish(gfProps);
             glassfish.start();
             CommandRunner runner = glassfish.getCommandRunner();
-
+ 
             connectionPool(runner);
             ScatteredArchive war = new ScatteredArchive("StsExam",
                     ScatteredArchive.Type.WAR, new File("src/main/webapp"));
@@ -43,21 +43,15 @@ public class Main {
         }
     }
 
-    public static void connectionPool(CommandRunner runner) {
-        /* create-jdbc-connection-pool 
---datasourceclassname org.apache.derby.jdbc.ClientDataSource 
---restype javax.sql.XADataSource 
---property portNumber=1527:password=APP:user=APP:serverName=
-localhost:databaseName=sun-appserv-samples:connectionAttribut
-es=\;create\\=true sample_derby_pool
-Command create-jdbc-connection-pool executed successfully. */
-        String dbUrl = "jdbc:mysql://localhost:8889/test";
+    public static void connectionPool(CommandRunner runner) {        
         CommandResult result = runner.run("create-jdbc-connection-pool",
                 "--datasourceclassname", "com.mysql.jdbc.jdbc2.optional.MysqlDataSource",
-                "--restype", "javax.sql.DataSource",
+                "--restype", "javax.sql.DataSource", 
                 "--property", "user=jolaade:password=M2m7bYDusSmTBx4s:databasename=test:server=localhost:port=8889",
+                "--steadypoolsize", "8",
+                "--maxpoolsize", "32",  
                 "jolaadeade"); 
-   
+    
         System.out.println("------output of create conn pool: " + result.getOutput());
 
         result = runner.run("create-jdbc-resource", "--connectionpoolid", "jolaadeade",
