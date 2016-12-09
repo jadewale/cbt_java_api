@@ -39,7 +39,10 @@ public class ApplicationConfig extends Application {
      * given list with all resources defined in the project.
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
-        resources.add(com.starktech.endpoint.CandidateResource.class); 
+        resources.add(com.starktech.endpoint.AdministratorResource.class); 
+        resources.add(com.starktech.endpoint.CandidateResource.class);
+        resources.add(com.starktech.endpoint.ExamResource.class);
+        resources.add(com.starktech.endpoint.StudentResource.class);
     }
     
 }

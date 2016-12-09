@@ -28,7 +28,7 @@ public class Main {
           .newGlassFish(gfProps);
       glassfish.start();
       
-            ScatteredArchive war = new ScatteredArchive("myApp",
+            ScatteredArchive war = new ScatteredArchive("StsExam",
           ScatteredArchive.Type.WAR, new File("src/main/webapp"));
             war.addClassPath(new File("target/classes"));
             glassfish.getDeployer().deploy(war.toURI());  

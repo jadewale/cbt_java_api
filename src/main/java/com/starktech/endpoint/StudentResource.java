@@ -19,31 +19,31 @@ import javax.ws.rs.core.MediaType;
  *
  * @author jolaadeadewale
  */
-@Path("candidate")
-public class CandidateResource {
+@Path("student")
+public class StudentResource {
 
     @Context
     private UriInfo context;
 
     /**
-     * Creates a new instance of CandidateResource
+     * Creates a new instance of StudentResource
      */
-    public CandidateResource() {
+    public StudentResource() {
     }
 
     /**
-     * Retrieves representation of an instance of com.starktech.endpoint.CandidateResource
+     * Retrieves representation of an instance of com.starktech.endpoint.StudentResource
      * @return an instance of java.lang.String
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getJson() {
         //TODO return proper representation object
-        return "Hello World";
+        throw new UnsupportedOperationException();
     }
 
     /**
-     * PUT method for updating or creating an instance of CandidateResource
+     * PUT method for updating or creating an instance of StudentResource
      * @param content representation for the resource
      */
     @PUT
