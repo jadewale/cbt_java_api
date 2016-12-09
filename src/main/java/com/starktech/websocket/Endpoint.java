@@ -4,41 +4,28 @@
  */
 package com.starktech.websocket;
 
-import com.starktech.services.FileStream;
 import com.starktech.services.UserExam; 
 import com.starktech.services.Utility;
-import com.google.gson.Gson;
-//import com.rest.service.Exam; 
-//import com.rest.service.StartUpClassOngoingExams;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.nio.ByteBuffer;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.naming.Name;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
+import com.starktech.endpoint.ExamResource;
 
 /**
  *
  * @author Jolaade Adewale
  */
-@ServerEndpoint("/endpoint")
+@ServerEndpoint("/endpoint") 
 public class Endpoint {
 
     private static final Logger logger = Logger.getLogger("end");
@@ -47,16 +34,16 @@ public class Endpoint {
     public void getStudentNames() {
         
         HashMap<String, UserExam> candidateResource = new HashMap<>();
-        /* 
-        Exam.registeredStudents.keySet().forEach( key -> { 
+        
+        ExamResource.registeredStudents.keySet().forEach( key -> { 
              UserExam userExam = new UserExam();
-            userExam.setLastName(Exam.registeredStudents.get(key)[0]);
-            userExam.setFirstName(Exam.registeredStudents.get(key)[1]);
-            userExam.setMiddleName(Exam.registeredStudents.get(key)[2]);
-            userExam.setGender(Exam.registeredStudents.get(key)[3]);
-            userExam.setUsername(Exam.registeredStudents.get(key)[4]);
-            if(Exam.registeredCourses.containsKey(key)) {
-                userExam.setExams(Exam.registeredCourses.get(key));
+            userExam.setLastName(ExamResource.registeredStudents.get(key)[0]);
+            userExam.setFirstName(ExamResource.registeredStudents.get(key)[1]);
+            userExam.setMiddleName(ExamResource.registeredStudents.get(key)[2]);
+            userExam.setGender(ExamResource.registeredStudents.get(key)[3]);
+            userExam.setUsername(ExamResource.registeredStudents.get(key)[4]);
+            if(ExamResource.registeredCourses.containsKey(key)) {
+                userExam.setExams(ExamResource.registeredCourses.get(key));
             }
             candidateResource.put(key, userExam); 
         });
@@ -65,7 +52,7 @@ public class Endpoint {
                  ss.getUserProperties().containsValue("Administrator"))
                 .filter(ss -> ss.isOpen()).forEach(ss -> {
                     ss.getAsyncRemote().sendObject(Utility.response(candidateResource)); 
-                 }); */
+                 }); 
     } 
 
     private void addQueue(Session session) {
@@ -154,3 +141,4 @@ public class Endpoint {
         }
     }
 }
+  
