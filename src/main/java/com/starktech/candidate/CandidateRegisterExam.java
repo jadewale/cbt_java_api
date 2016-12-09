@@ -4,8 +4,6 @@
  * and open the template in the editor.
  */
 package com.starktech.candidate;
-
-
 import com.starktech.services.DatabaseConnection;
 import com.starktech.services.LogData;
 import com.starktech.services.QueryStudents;
@@ -22,8 +20,9 @@ import com.starktech.endpoint.ExamResource;
  * @author user
  */
 public class CandidateRegisterExam {
-
-    public String insert(ArrayList<String> students, String exam) {
+ 
+    public String insert(ArrayList<String> students, String exam) { 
+          
         try (Connection connection = DatabaseConnection.getConnection(); PreparedStatement insertStudent
                 = DatabaseConnection.queryDB(connection, QueryStudents.INSERT_INTO_NEW_EXAM, "Inserting students into "
                         + "the database " + students); PreparedStatement setCount
