@@ -49,5 +49,5 @@ public class StudentResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public void putJson(String content) {
-    }
+    } 
 }
