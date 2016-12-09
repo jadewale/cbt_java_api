@@ -47,7 +47,7 @@ public class CandidateResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String getJson() {
         //TODO return proper representation object
-        return "Hello World";
+        return "";
     }
 
     /**

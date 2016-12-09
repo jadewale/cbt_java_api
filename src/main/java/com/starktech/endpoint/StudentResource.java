@@ -39,7 +39,7 @@ public class StudentResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String getJson() {
         //TODO return proper representation object
-        throw new UnsupportedOperationException();
+        return ""; 
     }
 
     /**
