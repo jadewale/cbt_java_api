@@ -69,6 +69,8 @@ public class Main {
                 "--property", "user=b579248f3101c2:password=e9ca812d:databasename=heroku_5fff44d305e31ec:servername=us-cdbr-iron-east-04.cleardb.net:port=3306",
                 "--steadypoolsize", "8",
                 "--maxpoolsize", "32",
+                "--poolresize", "2",
+                "--idletimeout", "300",
                 "jolaadeade");
 
         System.out.println("------output of create conn pool: " + result.getOutput());
@@ -80,8 +82,13 @@ public class Main {
     } 
 
     /*
-     create-jdbc-connection-pool [--datasourceclassname=datasourceclassname] [--restype=restype] [--steadypoolsize=8] [--maxpoolsize=32] [--maxwait=60000] 
-    [--poolresize=2] [--idletimeout=300] [--initsql=initsql] [--isolationlevel=isolationlevel] [--isisolationguaranteed=true] [--isconnectvalidatereq=false] [--validationmethod=table] [--validationtable=validationtable] [--failconnection=false] [--allownoncomponentcallers=false] [--nontransactionalconnections=false] [--validateatmostonceperiod=0] [--leaktimeout=0] [--leakreclaim=false] [--creationretryattempts=0] [--creationretryinterval=10] 
+     create-jdbc-connection-pool [--datasourceclassname=datasourceclassname] [--restype=restype]
+    [--steadypoolsize=8] [--maxpoolsize=32] [--maxwait=60000] 
+    [--poolresize=2] [--idletimeout=300] [--initsql=initsql] 
+    [--isolationlevel=isolationlevel] [--isisolationguaranteed=true]
+    [--isconnectvalidatereq=false] [--validationmethod=table] [--validationtable=validationtable] 
+    [--failconnection=false] [--allownoncomponentcallers=false] [--nontransactionalconnections=false]
+    [--validateatmostonceperiod=0] [--leaktimeout=0] [--leakreclaim=false] [--creationretryattempts=0] [--creationretryinterval=10] 
     [--sqltracelisteners=sqltracelisteners] [--statementtimeout=-1] [--statementleaktimeout=0] 
     [--statementleakreclaim=false] [--lazyconnectionenlistment=false]
     [--lazyconnectionassociation=false] [--associatewiththread=false]
@@ -97,6 +104,7 @@ public class Main {
                 "--property", prop,
                 "--steadypoolsize", "8",
                 "--maxpoolsize", "32",
+                "--poolresize", "2",
                 "jolaadeade");
 
         System.out.println("------output of create conn pool: " + result.getOutput());

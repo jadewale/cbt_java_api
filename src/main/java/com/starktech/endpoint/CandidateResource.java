@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.starktech.candidate.CandidateAuth;
 import com.starktech.candidate.CandidateRegistration;
 import com.starktech.candidate.CandidateRegisterExam;
+import com.starktech.candidate.CandidateExamData;
 import com.starktech.services.UserDetails;
 import com.starktech.services.Utility;
 import javax.ws.rs.core.Context;
@@ -40,25 +41,42 @@ public class CandidateResource {
     }
 
     /**
-     * Retrieves representation of an instance of com.starktech.endpoint.CandidateResource
+     * Retrieves representation of an instance of
+     * com.starktech.endpoint.CandidateResource
+     *
      * @return an instance of java.lang.String
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getJson() {
         //TODO return proper representation object
-        return ""; 
+        return "";
     }
 
     /**
      * PUT method for updating or creating an instance of CandidateResource
+     *
      * @param content representation for the resource
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public void putJson(String content) {
     }
-    
+
+    @GET
+    @Path("course/information")
+    @Produces("application/json")
+    public String getCandidateCourseInformation(String subject, int status) {
+ 
+        switch (status) {
+            case 4:
+                CandidateExamData returnExamData = new CandidateExamData();
+                return Utility.response(returnExamData.getResultSummary(subject)); 
+        }
+
+        return Utility.response(null);
+    }
+
     @POST
     @Path("login")
     @Produces("application/json")
@@ -69,27 +87,27 @@ public class CandidateResource {
                 "password"}, 3);
             if (UserDetails.validUsername(userData[0]) && UserDetails.validPassword(userData[1])) {
                 CandidateAuth verification = new CandidateAuth();
-                return Utility.response(verification.authenticateUser(userData[0], userData[1])); 
+                return Utility.response(verification.authenticateUser(userData[0], userData[1]));
             }
         }
 
-        return Utility.parseString(null); 
+        return Utility.parseString(null);
     }
-    
+
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("register")
     public String student(String json) {
-         
-        if(Utility.isNotNull(json)) {
-            String[] candidateData = Utility.JsonParse(json, new String[]{"fullName", "password", 
-                "email", "number", "amount"}, 5); 
+
+        if (Utility.isNotNull(json)) {
+            String[] candidateData = Utility.JsonParse(json, new String[]{"fullName", "password",
+                "email", "number", "amount"}, 5);
             CandidateRegistration register = new CandidateRegistration();
-            if(Utility.isNotNull(candidateData[0]) && Utility.isNotNull(candidateData[1]) && 
-                    Utility.isNotNull(candidateData[2]) && Utility.isNotNull(candidateData[3])) {
-                return Utility.response(register.startRegistration(candidateData[0], candidateData[1], candidateData[2], 
+            if (Utility.isNotNull(candidateData[0]) && Utility.isNotNull(candidateData[1])
+                    && Utility.isNotNull(candidateData[2]) && Utility.isNotNull(candidateData[3])) {
+                return Utility.response(register.startRegistration(candidateData[0], candidateData[1], candidateData[2],
                         candidateData[3], candidateData[4]));
-            }   
+            }
         }
         /*
         if (status.equals("1")) {
@@ -101,7 +119,7 @@ public class CandidateResource {
         return new Gson().toJson("Method not Called in registration post");
 
     }
-    
+
     @POST
     @Consumes("application/json")
     @Path("register/exam")
@@ -114,7 +132,7 @@ public class CandidateResource {
                 CandidateRegisterExam register = new CandidateRegisterExam();
                 return Utility.response(register.insert(Utility.stringToArray(studentData[0], "\""), exam));
             }
-        }   
+        }
         return Utility.response(false);
     }
 }
