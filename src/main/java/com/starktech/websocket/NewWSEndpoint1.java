@@ -5,8 +5,11 @@
  */
 package com.starktech.websocket;
 
-import javax.websocket.OnMessage;
+import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import javax.websocket.OnMessage;
 
 /**
  *
@@ -15,9 +18,11 @@ import javax.websocket.server.ServerEndpoint;
 @ServerEndpoint("/endpointResource")
 public class NewWSEndpoint1 {
 
+    static Queue<Session> queue = new ConcurrentLinkedQueue<Session>();
+ 
     @OnMessage
     public String onMessage(String message) {
         return null;
     }
-    
+
 }
