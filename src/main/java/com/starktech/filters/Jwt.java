@@ -30,22 +30,54 @@ import javax.servlet.http.HttpServletResponseWrapper;
  * @author jolaadeadewale
  */
 public class Jwt implements Filter {
-    
+
     private static final boolean debug = false;
 
     // The filter configuration object we are associated with.  If
     // this value is null, this filter instance is not currently
     // configured. 
     private FilterConfig filterConfig = null;
-    
+
     public Jwt() {
-    }    
-    
-    private void doBeforeProcessing(RequestWrapper request, ResponseWrapper response)
+    }
+
+    private boolean cheeckRequest(RequestWrapper request) {
+        return request.getPathInfo().contains("signUp");
+    }
+
+    private boolean verifyToken(String token) {
+        return true;
+    }
+
+    private void logToFile(RequestWrapper wrapper) {
+
+    }
+
+    private boolean doBeforeProcessing(RequestWrapper request, ResponseWrapper response)
             throws IOException, ServletException {
         if (debug) {
             log("Jwt:DoBeforeProcessing");
         }
+
+        System.out.println("I got hit the origin allowed should be in an ENV");  
+        HttpServletResponse headers = (HttpServletResponse) response;
+        headers.addHeader("Access-Control-Allow-Origin", "https://node-cbt.herokuapp.com/");
+        headers.addHeader("Access-Control-Allow-Credentials", "true");
+        headers.addHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+        headers.addHeader("Access-Control-Allow-Headers", "access-control-allow-headers, access-control-allow-origin, Content-Type");
+
+        logToFile(request);
+        if (request.getPathInfo() == null) {
+            return true;
+        }
+
+       /* if (!cheeckRequest(request)) {
+            String token = (request.getParameter("token") != null)
+                    ? request.getParameter("token") : request.getHeader("x-access-token");
+            if (token == null || !verifyToken(token)) {
+                return false;
+            }
+        } */
 
         // Write code here to process the request and/or response before
         // the rest of the filter chain is invoked.
@@ -76,8 +108,9 @@ public class Jwt implements Filter {
 	    log(buf.toString());
 	}
          */
-    }    
-    
+        return true;
+    }
+
     private void doAfterProcessing(RequestWrapper request, ResponseWrapper response)
             throws IOException, ServletException {
         if (debug) {
@@ -133,7 +166,7 @@ public class Jwt implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain)
             throws IOException, ServletException {
-        
+
         if (debug) {
             log("Jwt:doFilter()");
         }
@@ -148,11 +181,13 @@ public class Jwt implements Filter {
         // include requests.
         RequestWrapper wrappedRequest = new RequestWrapper((HttpServletRequest) request);
         ResponseWrapper wrappedResponse = new ResponseWrapper((HttpServletResponse) response);
-        
-        doBeforeProcessing(wrappedRequest, wrappedResponse);
-        
+
+        if (!doBeforeProcessing(wrappedRequest, wrappedResponse)) {
+
+        }
+
         Throwable problem = null;
-        
+
         try {
             chain.doFilter(wrappedRequest, wrappedResponse);
         } catch (Throwable t) {
@@ -162,7 +197,7 @@ public class Jwt implements Filter {
             problem = t;
             t.printStackTrace();
         }
-        
+
         doAfterProcessing(wrappedRequest, wrappedResponse);
 
         // If there was a problem, we want to rethrow it if it is
@@ -184,7 +219,7 @@ public class Jwt implements Filter {
     public FilterConfig getFilterConfig() {
         return (this.filterConfig);
     }
-  
+
     /**
      * Set the filter configuration object for this filter.
      *
@@ -197,16 +232,16 @@ public class Jwt implements Filter {
     /**
      * Destroy method for this filter
      */
-    public void destroy() {        
+    public void destroy() {
     }
 
     /**
      * Init method for this filter
      */
-    public void init(FilterConfig filterConfig) {        
+    public void init(FilterConfig filterConfig) {
         this.filterConfig = filterConfig;
         if (filterConfig != null) {
-            if (debug) {                
+            if (debug) {
                 log("Jwt: Initializing filter");
             }
         }
@@ -224,22 +259,22 @@ public class Jwt implements Filter {
         sb.append(filterConfig);
         sb.append(")");
         return (sb.toString());
-        
+
     }
-    
+
     private void sendProcessingError(Throwable t, ServletResponse response) {
-        String stackTrace = getStackTrace(t);        
-        
+        String stackTrace = getStackTrace(t);
+
         if (stackTrace != null && !stackTrace.equals("")) {
             try {
                 response.setContentType("text/html");
                 PrintStream ps = new PrintStream(response.getOutputStream());
-                PrintWriter pw = new PrintWriter(ps);                
+                PrintWriter pw = new PrintWriter(ps);
                 pw.print("<html>\n<head>\n<title>Error</title>\n</head>\n<body>\n"); //NOI18N
 
                 // PENDING! Localize this for next official release
-                pw.print("<h1>The resource did not process correctly</h1>\n<pre>\n");                
-                pw.print(stackTrace);                
+                pw.print("<h1>The resource did not process correctly</h1>\n<pre>\n");
+                pw.print(stackTrace);
                 pw.print("</pre></body>\n</html>"); //NOI18N
                 pw.close();
                 ps.close();
@@ -256,7 +291,7 @@ public class Jwt implements Filter {
             }
         }
     }
-    
+
     public static String getStackTrace(Throwable t) {
         String stackTrace = null;
         try {
@@ -270,9 +305,9 @@ public class Jwt implements Filter {
         }
         return stackTrace;
     }
-    
+
     public void log(String msg) {
-        filterConfig.getServletContext().log(msg);        
+        filterConfig.getServletContext().log(msg);
     }
 
     /**
@@ -283,7 +318,7 @@ public class Jwt implements Filter {
      * access to the wrapped request using the method getRequest()
      */
     class RequestWrapper extends HttpServletRequestWrapper {
-        
+
         public RequestWrapper(HttpServletRequest request) {
             super(request);
         }
@@ -292,12 +327,12 @@ public class Jwt implements Filter {
         // you must also override the getParameter, getParameterValues, getParameterMap,
         // and getParameterNames methods.
         protected Hashtable localParams = null;
-        
+
         public void setParameter(String name, String[] values) {
             if (debug) {
                 System.out.println("Jwt::setParameter(" + name + "=" + values + ")" + " localParams = " + localParams);
             }
-            
+
             if (localParams == null) {
                 localParams = new Hashtable();
                 // Copy the parameters from the underlying request.
@@ -311,7 +346,7 @@ public class Jwt implements Filter {
             }
             localParams.put(name, values);
         }
-        
+
         @Override
         public String getParameter(String name) {
             if (debug) {
@@ -330,7 +365,7 @@ public class Jwt implements Filter {
             }
             return (val == null ? null : val.toString());
         }
-        
+
         @Override
         public String[] getParameterValues(String name) {
             if (debug) {
@@ -341,7 +376,7 @@ public class Jwt implements Filter {
             }
             return (String[]) localParams.get(name);
         }
-        
+
         @Override
         public Enumeration getParameterNames() {
             if (debug) {
@@ -351,8 +386,8 @@ public class Jwt implements Filter {
                 return getRequest().getParameterNames();
             }
             return localParams.keys();
-        }        
-        
+        }
+
         @Override
         public Map getParameterMap() {
             if (debug) {
@@ -373,9 +408,9 @@ public class Jwt implements Filter {
      * get access to the wrapped response using the method getResponse()
      */
     class ResponseWrapper extends HttpServletResponseWrapper {
-        
+
         public ResponseWrapper(HttpServletResponse response) {
-            super(response);            
+            super(response);
         }
 
         // You might, for example, wish to know what cookies were set on the response
@@ -402,5 +437,5 @@ public class Jwt implements Filter {
 	}
          */
     }
-    
+
 }
