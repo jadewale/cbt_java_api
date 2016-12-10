@@ -8,7 +8,7 @@ package com.starktech.websocket;
 import javax.websocket.server.ServerEndpoint;
 import javax.websocket.OnMessage;
 import javax.websocket.Session;
-import com.starktech.endpoint.ExamResource;  
+import com.starktech.endpoint.ExamResource;
 import com.starktech.exams.StartUpClassOngoingExams;
 import com.starktech.services.UserExam;
 import com.starktech.services.Utility;
@@ -41,7 +41,7 @@ public class NewWSEndpoint1 {
             session.getUserProperties().put(session.getQueryString()
                     .split("Administrator=")[0], "Administrator");
             addQueue(session);
-            if(ExamResource.registeredCourses == null) {
+            if (ExamResource.registeredStudents == null) {
                 SocketHelper.getStudents();
             }
             getStudentNames();
@@ -75,14 +75,14 @@ public class NewWSEndpoint1 {
     }
 
     public String getStudentNames() {
-        
-        if(ExamResource.registeredCourses == null) {
+
+        if (ExamResource.registeredStudents == null) {
             return null;
         }
-         
+
         HashMap<String, UserExam> candidateResource = new HashMap<>();
         Set<String> set = ExamResource.registeredCourses.keySet();
-        for(String key: set) { 
+        for (String key : set) {
             UserExam userExam = new UserExam();
             userExam.setLastName(ExamResource.registeredStudents.get(key)[0]);
             userExam.setFirstName(ExamResource.registeredStudents.get(key)[1]);
@@ -93,16 +93,16 @@ public class NewWSEndpoint1 {
                 userExam.setExams(ExamResource.registeredCourses.get(key));
             }
             candidateResource.put(key, userExam);
-        } 
-       
-       for(Session session : queue) {
-           if(session.getUserProperties().containsValue("Administrator")) {
-               if(session.isOpen()) {
-                   session.getAsyncRemote().sendObject(Utility.response(candidateResource));
-               }
-           }
-       }
-         return null;        
+        }
+
+        for (Session session : queue) {
+            if (session.getUserProperties().containsValue("Administrator")) {
+                if (session.isOpen()) {
+                    session.getAsyncRemote().sendObject(Utility.response(candidateResource));
+                }
+            }
+        }
+        return null;
     }
 
     private void addQueue(Session session) {
