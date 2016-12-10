@@ -9,14 +9,21 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.ws.RequestWrapper;
+import javax.servlet.http.HttpServletResponseWrapper;
 
 /**
  *
@@ -24,7 +31,7 @@ import javax.xml.ws.RequestWrapper;
  */
 public class Jwt implements Filter {
     
-    private static final boolean debug = true;
+    private static final boolean debug = false;
 
     // The filter configuration object we are associated with.  If
     // this value is null, this filter instance is not currently
@@ -34,35 +41,23 @@ public class Jwt implements Filter {
     public Jwt() {
     }    
     
-    private boolean verifyToken(String token) {
-        return true;
-    }
-    
-    private boolean checkRequest(ServletRequest request, HttpServletResponse header) {
-       String token = (request.getParameter("token") != null) ? request.getParameter("token") 
-            :header.getHeader("x-access-token");
-       
-       return (token == null || !verifyToken(token));
-    }
-     
-    private void doBeforeProcessing(ServletRequest request, ServletResponse response)
+    private void doBeforeProcessing(RequestWrapper request, ResponseWrapper response)
             throws IOException, ServletException {
         if (debug) {
             log("Jwt:DoBeforeProcessing");
         }
-        System.out.println("I got hit here");
-        HttpServletResponse headers = (HttpServletResponse) response;        
-        headers.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");   
-        headers.addHeader("Access-Control-Allow-Credentials", "true");
-        headers.addHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-        headers.addHeader("Access-Control-Allow-Headers", "access-control-allow-headers, access-control-allow-origin, Content-Type");
-        
-        if(checkRequest(request, headers)) {
-            
-        }
-        
+
         // Write code here to process the request and/or response before
         // the rest of the filter chain is invoked.
+        // For example, a filter that implements setParameter() on a request
+        // wrapper could set parameters on the request before passing it on
+        // to the filter chain.
+        /*
+	String [] valsOne = {"val1a", "val1b"};
+	String [] valsTwo = {"val2a", "val2b", "val2c"};
+	request.setParameter("name1", valsOne);
+	request.setParameter("nameTwo", valsTwo);
+         */
         // For example, a logging filter might log items on the request object,
         // such as the parameters.
         /*
@@ -83,13 +78,12 @@ public class Jwt implements Filter {
          */
     }    
     
-    private void doAfterProcessing(ServletRequest request, ServletResponse response)
+    private void doAfterProcessing(RequestWrapper request, ResponseWrapper response)
             throws IOException, ServletException {
         if (debug) {
             log("Jwt:DoAfterProcessing");
         }
-        
-        
+
         // Write code here to process the request and/or response after
         // the rest of the filter chain is invoked.
         // For example, a logging filter might log the attributes on the
@@ -105,7 +99,25 @@ public class Jwt implements Filter {
         // For example, a filter might append something to the response.
         /*
 	PrintWriter respOut = new PrintWriter(response.getWriter());
-	respOut.println("<P><B>This has been appended by an intrusive filter.</B>");
+	respOut.println("<p><strong>This has been appended by an intrusive filter.</strong></p>");
+	
+	respOut.println("<p>Params (after the filter chain):<br>");
+	for (Enumeration en = request.getParameterNames(); en.hasMoreElements(); ) {
+		String name = (String)en.nextElement();
+		String values[] = request.getParameterValues(name);
+		int n = values.length;
+		StringBuffer buf = new StringBuffer();
+		buf.append(name);
+		buf.append("=");
+		for(int i=0; i < n; i++) {
+		    buf.append(values[i]);
+		    if (i < n-1)
+			buf.append(",");
+		}
+		log(buf.toString());
+		respOut.println(buf.toString() + "<br>");
+	}
+        respOut.println("</p>");
          */
     }
 
@@ -125,12 +137,24 @@ public class Jwt implements Filter {
         if (debug) {
             log("Jwt:doFilter()");
         }
+
+        // Create wrappers for the request and response objects.
+        // Using these, you can extend the capabilities of the
+        // request and response, for example, allow setting parameters
+        // on the request before sending the request to the rest of the filter chain,
+        // or keep track of the cookies that are set on the response.
+        //
+        // Caveat: some servers do not handle wrappers very well for forward or
+        // include requests.
+        RequestWrapper wrappedRequest = new RequestWrapper((HttpServletRequest) request);
+        ResponseWrapper wrappedResponse = new ResponseWrapper((HttpServletResponse) response);
         
-        doBeforeProcessing(request, response);
-          
+        doBeforeProcessing(wrappedRequest, wrappedResponse);
+        
         Throwable problem = null;
+        
         try {
-            chain.doFilter(request, response);
+            chain.doFilter(wrappedRequest, wrappedResponse);
         } catch (Throwable t) {
             // If an exception is thrown somewhere down the filter chain,
             // we still want to execute our after processing, and then
@@ -139,7 +163,7 @@ public class Jwt implements Filter {
             t.printStackTrace();
         }
         
-        doAfterProcessing(request, response);
+        doAfterProcessing(wrappedRequest, wrappedResponse);
 
         // If there was a problem, we want to rethrow it if it is
         // a known type, otherwise log it.
@@ -160,7 +184,7 @@ public class Jwt implements Filter {
     public FilterConfig getFilterConfig() {
         return (this.filterConfig);
     }
-
+  
     /**
      * Set the filter configuration object for this filter.
      *
@@ -183,7 +207,7 @@ public class Jwt implements Filter {
         this.filterConfig = filterConfig;
         if (filterConfig != null) {
             if (debug) {                
-                log("Jwt:Initializing filter");
+                log("Jwt: Initializing filter");
             }
         }
     }
@@ -200,6 +224,7 @@ public class Jwt implements Filter {
         sb.append(filterConfig);
         sb.append(")");
         return (sb.toString());
+        
     }
     
     private void sendProcessingError(Throwable t, ServletResponse response) {
@@ -248,6 +273,134 @@ public class Jwt implements Filter {
     
     public void log(String msg) {
         filterConfig.getServletContext().log(msg);        
+    }
+
+    /**
+     * This request wrapper class extends the support class
+     * HttpServletRequestWrapper, which implements all the methods in the
+     * HttpServletRequest interface, as delegations to the wrapped request. You
+     * only need to override the methods that you need to change. You can get
+     * access to the wrapped request using the method getRequest()
+     */
+    class RequestWrapper extends HttpServletRequestWrapper {
+        
+        public RequestWrapper(HttpServletRequest request) {
+            super(request);
+        }
+
+        // You might, for example, wish to add a setParameter() method. To do this
+        // you must also override the getParameter, getParameterValues, getParameterMap,
+        // and getParameterNames methods.
+        protected Hashtable localParams = null;
+        
+        public void setParameter(String name, String[] values) {
+            if (debug) {
+                System.out.println("Jwt::setParameter(" + name + "=" + values + ")" + " localParams = " + localParams);
+            }
+            
+            if (localParams == null) {
+                localParams = new Hashtable();
+                // Copy the parameters from the underlying request.
+                Map wrappedParams = getRequest().getParameterMap();
+                Set keySet = wrappedParams.keySet();
+                for (Iterator it = keySet.iterator(); it.hasNext();) {
+                    Object key = it.next();
+                    Object value = wrappedParams.get(key);
+                    localParams.put(key, value);
+                }
+            }
+            localParams.put(name, values);
+        }
+        
+        @Override
+        public String getParameter(String name) {
+            if (debug) {
+                System.out.println("Jwt::getParameter(" + name + ") localParams = " + localParams);
+            }
+            if (localParams == null) {
+                return getRequest().getParameter(name);
+            }
+            Object val = localParams.get(name);
+            if (val instanceof String) {
+                return (String) val;
+            }
+            if (val instanceof String[]) {
+                String[] values = (String[]) val;
+                return values[0];
+            }
+            return (val == null ? null : val.toString());
+        }
+        
+        @Override
+        public String[] getParameterValues(String name) {
+            if (debug) {
+                System.out.println("Jwt::getParameterValues(" + name + ") localParams = " + localParams);
+            }
+            if (localParams == null) {
+                return getRequest().getParameterValues(name);
+            }
+            return (String[]) localParams.get(name);
+        }
+        
+        @Override
+        public Enumeration getParameterNames() {
+            if (debug) {
+                System.out.println("Jwt::getParameterNames() localParams = " + localParams);
+            }
+            if (localParams == null) {
+                return getRequest().getParameterNames();
+            }
+            return localParams.keys();
+        }        
+        
+        @Override
+        public Map getParameterMap() {
+            if (debug) {
+                System.out.println("Jwt::getParameterMap() localParams = " + localParams);
+            }
+            if (localParams == null) {
+                return getRequest().getParameterMap();
+            }
+            return localParams;
+        }
+    }
+
+    /**
+     * This response wrapper class extends the support class
+     * HttpServletResponseWrapper, which implements all the methods in the
+     * HttpServletResponse interface, as delegations to the wrapped response.
+     * You only need to override the methods that you need to change. You can
+     * get access to the wrapped response using the method getResponse()
+     */
+    class ResponseWrapper extends HttpServletResponseWrapper {
+        
+        public ResponseWrapper(HttpServletResponse response) {
+            super(response);            
+        }
+
+        // You might, for example, wish to know what cookies were set on the response
+        // as it went throught the filter chain. Since HttpServletRequest doesn't
+        // have a get cookies method, we will need to store them locally as they
+        // are being set.
+        /*
+	protected Vector cookies = null;
+	
+	// Create a new method that doesn't exist in HttpServletResponse
+	public Enumeration getCookies() {
+		if (cookies == null)
+		    cookies = new Vector();
+		return cookies.elements();
+	}
+	
+	// Override this method from HttpServletResponse to keep track
+	// of cookies locally as well as in the wrapped response.
+	public void addCookie (Cookie cookie) {
+		if (cookies == null)
+		    cookies = new Vector();
+		cookies.add(cookie);
+		((HttpServletResponse)getResponse()).addCookie(cookie);
+	}
+         */
     }
     
 }

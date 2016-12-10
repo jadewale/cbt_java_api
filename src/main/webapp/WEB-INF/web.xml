@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
-    <servlet>
-        <servlet-name>Jwt</servlet-name>
-        <servlet-class>com.starktech.filters.Jwt</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Jwt</servlet-name>
+    <filter>
+        <filter-name>Jwt</filter-name>
+        <filter-class>com.starktech.filters.Jwt</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>Jwt</filter-name>
         <url-pattern>/*</url-pattern>
-    </servlet-mapping>
+    </filter-mapping>
     <session-config>
         <session-timeout>
             30
         </session-timeout>
     </session-config>
-    <welcome-file-list> 
+    <welcome-file-list>
         <welcome-file>faces/index.xhtml</welcome-file>
     </welcome-file-list>
 </web-app>
