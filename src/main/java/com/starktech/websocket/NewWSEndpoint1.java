@@ -81,11 +81,9 @@ public class NewWSEndpoint1 {
         }
 
         HashMap<String, UserExam> candidateResource = new HashMap<>();
-        Set<String> set = ExamResource.registeredCourses.keySet();
+        Set<String> set = ExamResource.registeredStudents.keySet();
         for (String key : set) {
-            System.out.println(key + "At the moment"); 
-            UserExam userExam = new UserExam();
-            System.out.println(ExamResource.registeredStudents + " is the data"); 
+            UserExam userExam = new UserExam(); 
             userExam.setLastName(ExamResource.registeredStudents.get(key)[0]);
             userExam.setFirstName(ExamResource.registeredStudents.get(key)[1]);
             userExam.setMiddleName(ExamResource.registeredStudents.get(key)[2]);
@@ -93,7 +91,7 @@ public class NewWSEndpoint1 {
             userExam.setUsername(ExamResource.registeredStudents.get(key)[4]);
             if (ExamResource.registeredCourses.containsKey(key)) {
                 userExam.setExams(ExamResource.registeredCourses.get(key));
-            }
+            }  
             candidateResource.put(key, userExam);
         }
 
