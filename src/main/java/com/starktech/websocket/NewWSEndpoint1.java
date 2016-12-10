@@ -19,23 +19,23 @@ import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnOpen;
 
-   
 /**
  *
  * @author jolaadeadewale
  */
+
+
 @ServerEndpoint("/endpointResource")
 public class NewWSEndpoint1 {
 
     static Queue<Session> queue = new ConcurrentLinkedQueue<Session>();
- 
+
     @OnMessage
     public String onMessage(String message) {
         return null;
     }
-    
-    @OnOpen
-    public void openConnection(Session session) {
+
+    public String openConnection(Session session) {
         System.out.println("a new connection has been established ");
         if (session.getQueryString().contains("Administrator")) {
             session.getUserProperties().put(session.getQueryString()
@@ -43,56 +43,59 @@ public class NewWSEndpoint1 {
             addQueue(session);
             this.getStudentNames();
         }
+        return null;
     }
 
     public void adminUpdater() {
     }
 
     @OnClose
-    public void closedConnection(Session session) {
-        System.out.println("connection clossed properly");
-       
+    public String closedConnection(Session session) {
+
         System.out.println(session.getUserProperties().values());
         Set key = session.getUserProperties().keySet();
         if (key.toString().equals("Supervisor") || key.toString().equals("Administrator")) {
             queue.remove(session);
-            return;
+            return null;
         }
         queue.remove(session);
+
+        return null;
     }
 
     @OnError
-    public void error(Session session, Throwable t) {
-        queue.remove((Object) session);
+    public String error(Session session, Throwable t) {
+        queue.remove(session);
         t.printStackTrace();
+
+        return null;
     }
-    
+
     public void getStudentNames() {
-        
+
         HashMap<String, UserExam> candidateResource = new HashMap<>();
-        
-        ExamResource.registeredStudents.keySet().forEach( key -> { 
-             UserExam userExam = new UserExam();
+
+        ExamResource.registeredStudents.keySet().forEach(key -> {
+            UserExam userExam = new UserExam();
             userExam.setLastName(ExamResource.registeredStudents.get(key)[0]);
             userExam.setFirstName(ExamResource.registeredStudents.get(key)[1]);
             userExam.setMiddleName(ExamResource.registeredStudents.get(key)[2]);
             userExam.setGender(ExamResource.registeredStudents.get(key)[3]);
             userExam.setUsername(ExamResource.registeredStudents.get(key)[4]);
-            if(ExamResource.registeredCourses.containsKey(key)) {
+            if (ExamResource.registeredCourses.containsKey(key)) {
                 userExam.setExams(ExamResource.registeredCourses.get(key));
             }
-            candidateResource.put(key, userExam); 
+            candidateResource.put(key, userExam);
         });
-        
-        queue.stream().filter( ss -> 
-                 ss.getUserProperties().containsValue("Administrator"))
+
+        queue.stream().filter(ss
+                -> ss.getUserProperties().containsValue("Administrator"))
                 .filter(ss -> ss.isOpen()).forEach(ss -> {
-                    ss.getAsyncRemote().sendObject(Utility.response(candidateResource)); 
-                 }); 
-    } 
+            ss.getAsyncRemote().sendObject(Utility.response(candidateResource));
+        });
+    }
 
     private void addQueue(Session session) {
         queue.add(session);
     }
- 
 }
