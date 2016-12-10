@@ -9,6 +9,7 @@ import javax.websocket.server.ServerEndpoint;
 import javax.websocket.OnMessage;
 import javax.websocket.Session;
 import com.starktech.endpoint.ExamResource;  
+import com.starktech.exams.StartUpClassOngoingExams;
 import com.starktech.services.UserExam;
 import com.starktech.services.Utility;
 import java.util.HashMap;
@@ -40,7 +41,10 @@ public class NewWSEndpoint1 {
             session.getUserProperties().put(session.getQueryString()
                     .split("Administrator=")[0], "Administrator");
             addQueue(session);
-            this.getStudentNames();
+            if(ExamResource.registeredCourses == null) {
+                SocketHelper.getStudents();
+            }
+            getStudentNames();
         }
         return null;
     }
@@ -70,8 +74,12 @@ public class NewWSEndpoint1 {
         return null;
     }
 
-    public void getStudentNames() {
-
+    public String getStudentNames() {
+        
+        if(ExamResource.registeredCourses == null) {
+            return null;
+        }
+         
         HashMap<String, UserExam> candidateResource = new HashMap<>();
         Set<String> set = ExamResource.registeredCourses.keySet();
         for(String key: set) { 
@@ -86,23 +94,7 @@ public class NewWSEndpoint1 {
             }
             candidateResource.put(key, userExam);
         } 
-        
-        
-        /*
-        ExamResource.registeredStudents.keySet().forEach(key -> {
-            UserExam userExam = new UserExam();
-            userExam.setLastName(ExamResource.registeredStudents.get(key)[0]);
-            userExam.setFirstName(ExamResource.registeredStudents.get(key)[1]);
-            userExam.setMiddleName(ExamResource.registeredStudents.get(key)[2]);
-            userExam.setGender(ExamResource.registeredStudents.get(key)[3]);
-            userExam.setUsername(ExamResource.registeredStudents.get(key)[4]);
-            if (ExamResource.registeredCourses.containsKey(key)) {
-                userExam.setExams(ExamResource.registeredCourses.get(key));
-            }
-            candidateResource.put(key, userExam);
-        });
-         */ 
-         
+       
        for(Session session : queue) {
            if(session.getUserProperties().containsValue("Administrator")) {
                if(session.isOpen()) {
@@ -110,7 +102,7 @@ public class NewWSEndpoint1 {
                }
            }
        }
-                
+         return null;        
     }
 
     private void addQueue(Session session) {

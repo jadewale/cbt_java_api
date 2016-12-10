@@ -4,7 +4,6 @@
  */
 package com.starktech.exams;
 
-
 import com.starktech.services.DatabaseConnection;
 import com.starktech.services.ExamBuilder;
 import com.starktech.services.LogData;
@@ -46,46 +45,10 @@ public class StartUpClassOngoingExams {
 
                 Runnable multhiThread = new Runnable() {
                     @Override
-                    public void run() { 
+                    public void run() {
                         try {
-                            System.out.println("Started another thread");
-                            ExamResource.registeredCourses = new HashMap();
-                            ExamResource.getNewRegisteredStudents = "";
-                            while (resultSet1.next()) {
-                                String matricNumber = Utility.parseString(DatabaseConnection.getData(resultSet1,
-                                        "String", "matricExam")).split("\\*\\*\\*")[0];
-                                ArrayList<String> exams = new ArrayList<>(1);
-                                if (ExamResource.registeredCourses.containsKey(matricNumber)) {
-                                    exams = ExamResource.registeredCourses.get(matricNumber);
-                                    exams.add(Utility.parseString(DatabaseConnection.getData(resultSet1,
-                                            "String", "ExamName")));
-                                    ExamResource.registeredCourses.put(matricNumber, exams);
-                                    continue;
-                                }
-                                exams.add(Utility.parseString(DatabaseConnection.getData(resultSet1,
-                                        "String", "ExamName")));
-                                ExamResource.registeredCourses.put(matricNumber, exams);
-                            }
-
-                            try (ResultSet getResults2 = Utility.execQuery(examRegister)) {
-                                String[] studentData;
-                                while (getResults2.next()) {
-                                    studentData = new String[5];
-                                    studentData[0] = Utility.parseString(DatabaseConnection.getData(getResults2,
-                                            "String", "LastName"));
-                                    studentData[1] = Utility.parseString(DatabaseConnection.getData(getResults2,
-                                            "String", "FirstName"));
-                                    studentData[2] = Utility.parseString(DatabaseConnection.getData(getResults2,
-                                            "String", "MiddleName"));
-                                    studentData[3] = Utility.parseString(DatabaseConnection.getData(getResults2,
-                                            "String", "Gender"));
-                                    studentData[4] = Utility.parseString(DatabaseConnection.getData(getResults2,
-                                            "String", "StudentNumber"));
-
-                                    //studentsRegistered.put(getResults2.getString("StudentNumber"), getResults2.getString("LastName") + " " + getResults2.getString("FirstName"));
-                                    ExamResource.registeredStudents.put(getResults2.getString("StudentNumber"), studentData);
-                                }
-                            }
+                           System.out.println("Started another thread");
+                           getExamCandidates(resultSet1, examRegister); 
 
                         } catch (SQLException e) {
                             LogData.Log(e.getMessage(), "Start up class");
@@ -97,7 +60,7 @@ public class StartUpClassOngoingExams {
                 thread.start();
 
                 ArrayList<ExamBuilder> examBuilder = new ArrayList<>(1);
-                
+
                 while (resultSet.next()) {
                     exams = new ExamBuilder();
                     exams.setExamName(Utility.parseString(DatabaseConnection.getData(resultSet,
@@ -116,35 +79,76 @@ public class StartUpClassOngoingExams {
                             "FeedBack")));
                     examBuilder.add(exams);
                 }
-                
+
                 Response sendResponse = new Response();
                 sendResponse.setData(examBuilder);
                 sendResponse.setExams(setAllQuestions(exams, examBuilder));
-                
-                return sendResponse; 
+
+                return sendResponse;
             }
         } catch (SQLException e) {
 
         }
         return null;
     }
+ 
+    public void getExamCandidates(ResultSet resultSet1, PreparedStatement examRegister) throws SQLException{
+        ExamResource.registeredCourses = new HashMap();
+        ExamResource.getNewRegisteredStudents = "";
+        while (resultSet1.next()) {
+            String matricNumber = Utility.parseString(DatabaseConnection.getData(resultSet1,
+                    "String", "matricExam")).split("\\*\\*\\*")[0];
+            ArrayList<String> exams = new ArrayList<>(1);
+            if (ExamResource.registeredCourses.containsKey(matricNumber)) {
+                exams = ExamResource.registeredCourses.get(matricNumber);
+                exams.add(Utility.parseString(DatabaseConnection.getData(resultSet1,
+                        "String", "ExamName")));
+                ExamResource.registeredCourses.put(matricNumber, exams);
+                continue;
+            }
+            exams.add(Utility.parseString(DatabaseConnection.getData(resultSet1,
+                    "String", "ExamName")));
+            ExamResource.registeredCourses.put(matricNumber, exams);
+        }
+
+        try (ResultSet getResults2 = Utility.execQuery(examRegister)) {
+            String[] studentData;
+            while (getResults2.next()) {
+                studentData = new String[5];
+                studentData[0] = Utility.parseString(DatabaseConnection.getData(getResults2,
+                        "String", "LastName"));
+                studentData[1] = Utility.parseString(DatabaseConnection.getData(getResults2,
+                        "String", "FirstName"));
+                studentData[2] = Utility.parseString(DatabaseConnection.getData(getResults2,
+                        "String", "MiddleName"));
+                studentData[3] = Utility.parseString(DatabaseConnection.getData(getResults2,
+                        "String", "Gender"));
+                studentData[4] = Utility.parseString(DatabaseConnection.getData(getResults2,
+                        "String", "StudentNumber"));
+
+                //studentsRegistered.put(getResults2.getString("StudentNumber"), getResults2.getString("LastName") + " " + getResults2.getString("FirstName"));
+                ExamResource.registeredStudents.put(getResults2.getString("StudentNumber"), studentData);
+            }
+        }
+    }
 
     public ExamBuilder setAllQuestions(ExamBuilder exams, ArrayList<ExamBuilder> examBuilder) {
-        GetAllQuestionsGetAllPeople getQuestions = new GetAllQuestionsGetAllPeople(); 
+        GetAllQuestionsGetAllPeople getQuestions = new GetAllQuestionsGetAllPeople();
         exams = new ExamBuilder();
         exams.setExamName("AllExams");
         exams.setDuration("AllExams");
         exams.setExamQuestions(getQuestions.getExamQuestions(examBuilder));
-         
+
         return exams;
     }
-    
+
     class Response {
+
         private ExamBuilder exams;
         private ArrayList<ExamBuilder> data;
 
         public ExamBuilder getExams() {
-            return exams; 
+            return exams;
         }
 
         public void setExams(ExamBuilder exams) {
@@ -158,7 +162,7 @@ public class StartUpClassOngoingExams {
         public void setData(ArrayList<ExamBuilder> data) {
             this.data = data;
         }
-        
+
     }
 
     public void allowCandidateStart() {
