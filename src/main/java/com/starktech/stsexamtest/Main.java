@@ -71,6 +71,8 @@ public class Main {
                 "--maxpoolsize", "32",
                 "--poolresize", "2",
                 "--idletimeout", "300",
+                "--creationretryattempts", "10",
+                "--statementleaktimeout", "-1", 
                 "jolaadeade");
 
         System.out.println("------output of create conn pool: " + result.getOutput());
