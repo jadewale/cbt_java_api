@@ -31,7 +31,7 @@ public class WebSocket {
 
     private static final Logger logger = Logger.getLogger("end");
     static Queue<Session> queue = new ConcurrentLinkedQueue<Session>();
-
+ 
     public void getStudentNames() {
         
         HashMap<String, UserExam> candidateResource = new HashMap<>();

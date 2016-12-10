@@ -28,7 +28,7 @@ public class Main {
 
             GlassFishProperties gfProps = new GlassFishProperties();
             gfProps.setPort("http-listener",
-                    Integer.parseInt(System.getenv("PORT")));    
+                    Integer.parseInt(System.getenv("PORT")));
             final GlassFish glassfish = GlassFishRuntime.bootstrap()
                     .newGlassFish(gfProps);
             glassfish.start();
@@ -77,7 +77,7 @@ public class Main {
                 "jdbc/myDatasource");
 
         System.out.println("------output of create jdbc: " + result.getOutput());
-    }
+    } 
 
     /*
      create-jdbc-connection-pool [--datasourceclassname=datasourceclassname] [--restype=restype] [--steadypoolsize=8] [--maxpoolsize=32] [--maxwait=60000] 
@@ -89,7 +89,6 @@ public class Main {
     [--ping=false] [--pooling=true] [--statementcachesize=0] [--validationclassname=validationclassname]
     [--wrapjdbcobjects=true] [--description=description] [--property=property] jdbc_connection_pool_id
      */
-
     public static void connectionPool(CommandRunner runner, String prop) {
         CommandResult result = runner.run("create-jdbc-connection-pool",
                 "--datasourceclassname", "com.mysql.jdbc.jdbc2.optional.MysqlDataSource",
