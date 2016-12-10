@@ -8,7 +8,7 @@ package com.starktech.websocket;
 import javax.websocket.server.ServerEndpoint;
 import javax.websocket.OnMessage;
 import javax.websocket.Session;
-import com.starktech.endpoint.ExamResource;
+import com.starktech.endpoint.ExamResource;  
 import com.starktech.services.UserExam;
 import com.starktech.services.Utility;
 import java.util.HashMap;
@@ -23,8 +23,6 @@ import javax.websocket.OnOpen;
  *
  * @author jolaadeadewale
  */
-
-
 @ServerEndpoint("/endpointResource")
 public class NewWSEndpoint1 {
 
@@ -35,6 +33,7 @@ public class NewWSEndpoint1 {
         return null;
     }
 
+    @OnOpen
     public String openConnection(Session session) {
         System.out.println("a new connection has been established ");
         if (session.getQueryString().contains("Administrator")) {
@@ -74,7 +73,20 @@ public class NewWSEndpoint1 {
     public void getStudentNames() {
 
         HashMap<String, UserExam> candidateResource = new HashMap<>();
-
+        Set<String> set = ExamResource.registeredCourses.keySet();
+        for(String key: set) { 
+            UserExam userExam = new UserExam();
+            userExam.setLastName(ExamResource.registeredStudents.get(key)[0]);
+            userExam.setFirstName(ExamResource.registeredStudents.get(key)[1]);
+            userExam.setMiddleName(ExamResource.registeredStudents.get(key)[2]);
+            userExam.setGender(ExamResource.registeredStudents.get(key)[3]);
+            userExam.setUsername(ExamResource.registeredStudents.get(key)[4]);
+            if (ExamResource.registeredCourses.containsKey(key)) {
+                userExam.setExams(ExamResource.registeredCourses.get(key));
+            }
+            candidateResource.put(key, userExam);
+        } 
+        /*
         ExamResource.registeredStudents.keySet().forEach(key -> {
             UserExam userExam = new UserExam();
             userExam.setLastName(ExamResource.registeredStudents.get(key)[0]);
@@ -93,10 +105,10 @@ public class NewWSEndpoint1 {
                 .filter(ss -> ss.isOpen()).forEach(ss -> {
             ss.getAsyncRemote().sendObject(Utility.response(candidateResource));
         });
+          */
     }
 
     private void addQueue(Session session) {
         queue.add(session);
     }
 }
- 
