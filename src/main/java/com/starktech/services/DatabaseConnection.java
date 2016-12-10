@@ -31,6 +31,8 @@ public class DatabaseConnection {
             javax.naming.InitialContext ctx = new javax.naming.InitialContext();
             javax.sql.DataSource datasource;
             datasource = (javax.sql.DataSource) ctx.lookup("jdbc/myDatasource");
+            System.out.println(datasource);
+            System.out.println(datasource.getConnection().getMetaData().getURL()); 
             return connection = datasource.getConnection();
         } catch (NamingException | SQLException e) {
             LogData.Log(e.getMessage(), "DatabaseConnection");

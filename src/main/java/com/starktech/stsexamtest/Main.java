@@ -23,7 +23,7 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-
+                
             GlassFishProperties gfProps = new GlassFishProperties();
             gfProps.setPort("http-listener",
                     Integer.parseInt(System.getenv("PORT")));
@@ -42,15 +42,15 @@ public class Main {
             e.printStackTrace();
         }
     }
-
+   //mysql://b579248f3101c2:e9ca812d@us-cdbr-iron-east-04.cleardb.net/heroku_5fff44d305e31ec?reconnect=true
     public static void connectionPool(CommandRunner runner) {        
         CommandResult result = runner.run("create-jdbc-connection-pool",
                 "--datasourceclassname", "com.mysql.jdbc.jdbc2.optional.MysqlDataSource",
                 "--restype", "javax.sql.DataSource", 
-                "--property", "user=jolaade:password=M2m7bYDusSmTBx4s:databasename=test:server=localhost:port=8889",
-                "--steadypoolsize", "8",
+                "--property", "user=b579248f3101c2:password=e9ca812d:databasename=heroku_5fff44d305e31ec:server=us-cdbr-iron-east-04.cleardb.net:port=3306",
+                "--steadypoolsize", "8", 
                 "--maxpoolsize", "32",  
-                "jolaadeade"); 
+                "jolaadeade");  
     
         System.out.println("------output of create conn pool: " + result.getOutput());
 
@@ -59,4 +59,14 @@ public class Main {
 
         System.out.println("------output of create jdbc: " + result.getOutput());
     }
-}
+    /*
+     create-jdbc-connection-pool [--datasourceclassname=datasourceclassname] [--restype=restype] [--steadypoolsize=8] [--maxpoolsize=32] [--maxwait=60000] 
+    [--poolresize=2] [--idletimeout=300] [--initsql=initsql] [--isolationlevel=isolationlevel] [--isisolationguaranteed=true] [--isconnectvalidatereq=false] [--validationmethod=table] [--validationtable=validationtable] [--failconnection=false] [--allownoncomponentcallers=false] [--nontransactionalconnections=false] [--validateatmostonceperiod=0] [--leaktimeout=0] [--leakreclaim=false] [--creationretryattempts=0] [--creationretryinterval=10] 
+    [--sqltracelisteners=sqltracelisteners] [--statementtimeout=-1] [--statementleaktimeout=0] 
+    [--statementleakreclaim=false] [--lazyconnectionenlistment=false]
+    [--lazyconnectionassociation=false] [--associatewiththread=false]
+    [--driverclassname=driverclassname] [--matchconnections=false] [--maxconnectionusagecount=0]
+    [--ping=false] [--pooling=true] [--statementcachesize=0] [--validationclassname=validationclassname]
+    [--wrapjdbcobjects=true] [--description=description] [--property=property] jdbc_connection_pool_id
+    */
+} 
