@@ -66,14 +66,14 @@ public class CandidateResource {
     @GET
     @Path("course/information")
     @Produces("application/json")
-    public String getCandidateCourseInformation(String subject, int status) {
- 
+    public String getCandidateCourseInformation(@QueryParam("subject") String subject, @QueryParam("status") int status) {
+
         switch (status) {
             case 4:
                 CandidateExamData returnExamData = new CandidateExamData();
-                return Utility.response(returnExamData.getResultSummary(subject)); 
+                return Utility.response(returnExamData.getResultSummary(subject));
         }
-
+        
         return Utility.response(null);
     }
 
