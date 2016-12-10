@@ -28,12 +28,12 @@ public class Main {
 
             GlassFishProperties gfProps = new GlassFishProperties();
             gfProps.setPort("http-listener",
-                    Integer.parseInt("10801"));  
+                    Integer.parseInt(System.getenv("PORT")));    
             final GlassFish glassfish = GlassFishRuntime.bootstrap()
                     .newGlassFish(gfProps);
             glassfish.start();
             CommandRunner runner = glassfish.getCommandRunner();
-            String dbUrl = System.getenv("CLEARDB_DATABASE_URL"); 
+            String dbUrl = System.getenv("CLEARDB_DATABASE_URL");
             if (dbUrl != null) {
                 System.out.println("-------db url: " + dbUrl);
                 Matcher matcher = Pattern.compile("mysql://(.*):(.*)@(.*)/(.*)").matcher(dbUrl);
