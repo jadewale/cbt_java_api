@@ -87,6 +87,8 @@ public class NewWSEndpoint1 {
             candidateResource.put(key, userExam);
         } 
         
+        
+        /*
         ExamResource.registeredStudents.keySet().forEach(key -> {
             UserExam userExam = new UserExam();
             userExam.setLastName(ExamResource.registeredStudents.get(key)[0]);
@@ -99,13 +101,16 @@ public class NewWSEndpoint1 {
             }
             candidateResource.put(key, userExam);
         });
-
-        queue.stream().filter(ss
-                -> ss.getUserProperties().containsValue("Administrator"))
-                .filter(ss -> ss.isOpen()).forEach(ss -> {
-            ss.getAsyncRemote().sendObject(Utility.response(candidateResource));
-        });
-            
+         */ 
+         
+       for(Session session : queue) {
+           if(session.getUserProperties().containsValue("Administrator")) {
+               if(session.isOpen()) {
+                   session.getAsyncRemote().sendObject(Utility.response(candidateResource));
+               }
+           }
+       }
+                
     }
 
     private void addQueue(Session session) {
