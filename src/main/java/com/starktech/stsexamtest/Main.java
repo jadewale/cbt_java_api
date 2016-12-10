@@ -35,7 +35,7 @@ public class Main {
             CommandRunner runner = glassfish.getCommandRunner();
             String dbUrl = System.getenv("CLEARDB_DATABASE_URL");
             if (dbUrl != null) {
-                System.out.println("-------db url: " + dbUrl);
+                /*System.out.println("-------db url: " + dbUrl);
                 Matcher matcher = Pattern.compile("mysql://(.*):(.*)@(.*)/(.*)").matcher(dbUrl);
                 matcher.find();
 
@@ -45,7 +45,8 @@ public class Main {
                 String password = matcher.group(2);
                 String properties = "user=" + user + ":password=" + password + ":databasename=" + database + ":loglevel=4:servername=" + host;
                 System.out.println(properties); 
-                connectionPool(runner, properties);
+                connectionPool(runner, properties); */
+                connectionPool(runner);
             } else {
                 connectionPool(runner);
             }
