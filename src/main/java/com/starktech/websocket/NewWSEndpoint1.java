@@ -86,7 +86,7 @@ public class NewWSEndpoint1 {
             }
             candidateResource.put(key, userExam);
         } 
-        /*
+        
         ExamResource.registeredStudents.keySet().forEach(key -> {
             UserExam userExam = new UserExam();
             userExam.setLastName(ExamResource.registeredStudents.get(key)[0]);
@@ -105,7 +105,7 @@ public class NewWSEndpoint1 {
                 .filter(ss -> ss.isOpen()).forEach(ss -> {
             ss.getAsyncRemote().sendObject(Utility.response(candidateResource));
         });
-          */
+            
     }
 
     private void addQueue(Session session) {
