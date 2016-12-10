@@ -1,1 +1,1 @@
-java -cp target/classes:target/StsExamTest-1.0-SNAPSHOT/WEB-INF/lib/* com/starktech/stsexamtest/Main
+java -cp "target/classes:target/StsExamTest-1.0-SNAPSHOT/WEB-INF/lib/*" "com/starktech/stsexamtest/Main"
