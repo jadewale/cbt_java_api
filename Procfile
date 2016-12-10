@@ -1,1 +1,1 @@
-java sh target/bin/main
+java $JAVA_OPTS -cp "target/classes:target/StsExamTest-1.0-SNAPSHOT/WEB-INF/lib/*" "com/starktech/stsexamtest/Main"
