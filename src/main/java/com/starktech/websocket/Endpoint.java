@@ -1,10 +1,12 @@
 /*
- * To change this template, choose Tools | Templates
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package com.starktech.websocket;
 
-import com.starktech.services.UserExam; 
+import com.starktech.endpoint.ExamResource;
+import com.starktech.services.UserExam;
 import com.starktech.services.Utility;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
@@ -19,13 +21,12 @@ import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
-import com.starktech.endpoint.ExamResource;
 
-/**
+/** 
  *
- * @author Jolaade Adewale
+ * @author jolaadeadewale
  */
-@ServerEndpoint("/endpoint")  
+@ServerEndpoint("/endpoint")
 public class Endpoint {
 
     private static final Logger logger = Logger.getLogger("end");
@@ -127,10 +128,10 @@ public class Endpoint {
         public String getFirstName() {
             return this.firstName;
         }
-
+ 
         public void setFirstName(String firstName) {
             this.firstName = firstName;
-        }
+        } 
 
         public String getMatric() {
             return this.matric;
@@ -140,5 +141,5 @@ public class Endpoint {
             this.matric = matric;
         }
     }
+    
 }
-  
