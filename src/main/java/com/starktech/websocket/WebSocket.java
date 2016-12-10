@@ -21,13 +21,13 @@ import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
- 
-/** 
+
+/**
  *
  * @author jolaadeadewale
- */
+ */ 
 @ServerEndpoint("/endpoint")
-public class Endpoint {
+public class WebSocket {
 
     private static final Logger logger = Logger.getLogger("end");
     static Queue<Session> queue = new ConcurrentLinkedQueue<Session>();
