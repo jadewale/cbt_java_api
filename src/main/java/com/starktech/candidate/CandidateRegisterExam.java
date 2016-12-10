@@ -58,7 +58,7 @@ public class CandidateRegisterExam {
                 catch(SQLException e) {
                     LogData.Log(e.getMessage(), "Update Registered Students in StudentResourceRegister");
                 }
-                ArrayList<String> exams = new ArrayList<>(1);
+                ArrayList<String> exams = null;//new ArrayList<>(1);  
                 if (ExamResource.registeredCourses != null && ExamResource.registeredCourses.containsKey(student)) {
                     exams = ExamResource.registeredCourses.get(student);
                     exams.add(exam);
@@ -70,7 +70,7 @@ public class CandidateRegisterExam {
             
             return "Registered Candidates";  
 
-        } catch (SQLException e) {
+        } catch (SQLException | ArrayIndexOutOfBoundsException e) {
             LogData.Log(e.getMessage(), "Insert new student");
         }
         

@@ -25,7 +25,7 @@ import com.starktech.endpoint.ExamResource;
  *
  * @author Jolaade Adewale
  */
-@ServerEndpoint("/endpoint") 
+@ServerEndpoint("/endpoint")  
 public class Endpoint {
 
     private static final Logger logger = Logger.getLogger("end");

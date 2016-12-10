@@ -34,7 +34,7 @@ public class DatabaseConnection {
             return connection = datasource.getConnection(); 
         } catch (NamingException | SQLException e) {
             LogData.Log(e.getMessage(), "DatabaseConnection");
-        }
+        } 
 
         throw new NullPointerException("Connection object cannot be null");
         
