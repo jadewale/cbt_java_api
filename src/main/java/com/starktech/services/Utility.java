@@ -139,7 +139,7 @@ public class Utility {
     public static String [] JsonParse(String data, String [] list, int size) {
         JsonObject  jobject = new JsonParser().parse(data).getAsJsonObject();
         String [] jsonData = new String[size];
-        int count =0;
+        int count = 0;
         for (String value : list) {
             if(jobject.get(value).isJsonPrimitive()) {
                 jsonData[count++] = jobject.get(value).getAsString();

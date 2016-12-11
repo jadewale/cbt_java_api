@@ -67,6 +67,7 @@ public class Main {
                 "--restype", "javax.sql.DataSource",
                 "--driverClassName", "com.mysql.jdbc.Driver",
                 "--property", "user=b579248f3101c2:password=e9ca812d:databasename=heroku_5fff44d305e31ec:servername=us-cdbr-iron-east-04.cleardb.net:port=3306",
+                "--idletimeout", "0",  
                 "jolaadeade");
 
         System.out.println("------output of create conn pool: " + result.getOutput());
