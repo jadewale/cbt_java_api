@@ -72,8 +72,7 @@ public class Main {
                 "--maxpoolsize", "32",
                 "--poolresize", "2",
                 "--maxwait","60000",
-                "--idletimeout", "300",
-                "--initsql","initsql",
+                "--idletimeout", "300", 
                 "--isisolationguaranteed", "true",
                 "--isconnectvalidatereq", "false",
                 "--failconnection", "false",
@@ -84,6 +83,10 @@ public class Main {
                 "--creationretryattempts", "0",
                 "--creationretryinterval","10",
                 "--statementtimeout", "-1",
+
+                "--pooling", "true", 
+               /* "--statementtimeout", "-1",
+>>>>>>> configure connection pool
                 "--statementleaktimeout", "0",
                 "--statementleakreclaim", "false",
                 "--lazyconnectionenlistment", "false",
@@ -91,9 +94,13 @@ public class Main {
                 "--matchconnections", "false",
                 "--maxconnectionusagecount", "0",
                 "--ping", "false",
+<<<<<<< HEAD
                 "--pooling", "true",
                 "--statementcachesize", "0",
                 "--wrapjdbcobjects", "false", 
+=======
+                "--statementcachesize", "0",
+                "--wrapjdbcobjects", "false",  */
                 "jolaadeade");
 
         System.out.println("------output of create conn pool: " + result.getOutput());
