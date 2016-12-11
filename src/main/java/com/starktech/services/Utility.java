@@ -40,7 +40,6 @@ public class Utility {
     
     public static ResultSet execQuery(PreparedStatement statement) {
         try{
-            System.out.println(statement +" coming from utility");
             return statement.executeQuery();
         }
         catch(SQLException e) {
