@@ -7,6 +7,7 @@ package com.starktech.services;
 
 import java.sql.PreparedStatement;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.naming.NamingException;
@@ -25,17 +26,30 @@ public class DatabaseConnection {
      *
      * @return connection the connection Object
      */
-    public static Connection getConnection() {
+    public static Connection getConnection() throws SQLException {
         try {
             LogData.Log("creating connection", "Database Connection");
             javax.naming.InitialContext ctx = new javax.naming.InitialContext();
             javax.sql.DataSource datasource;
             datasource = (javax.sql.DataSource) ctx.lookup("jdbc/myDatasource");
-            return connection = datasource.getConnection(); 
+            connection = datasource.getConnection();
+            if(connection == null) {
+                System.err.println("The connection is null");
+                String url = "jdbc:mysql:us-cdbr-iron-east-04.cleardb.net:3306/heroku_5fff44d305e31ec";
+               connection = DriverManager.getConnection(url, 
+                "b579248f3101c2", "e9ca812d");
+            }
+            else{
+                System.err.println("The connection is not null");
+            }
+            
+            return connection;
         } catch (NamingException | SQLException e) {
             LogData.Log(e.getMessage(), "DatabaseConnection");
         } 
-
+        
+        
+        
         throw new NullPointerException("Connection object cannot be null");
         
     }
@@ -86,12 +100,12 @@ public class DatabaseConnection {
      * @param data data[0] log message, data[1] class data[2] *query* to execute
      * @return PreparedStatement
      */
-    public static PreparedStatement initialiseDatabase(Connection conn, PreparedStatement statement, String... data) {
+    public static PreparedStatement initialiseDatabase(Connection conn, PreparedStatement statement, String... data) throws SQLException {
         LogData.Log(data[0], data[1]);
         conn = DatabaseConnection.getConnection();
         statement = DatabaseConnection.queryDB(conn, data[2]);
         return statement;
-    }
+    } 
 
     public static void setData(PreparedStatement statement, Object data, String type,
             int position) {
