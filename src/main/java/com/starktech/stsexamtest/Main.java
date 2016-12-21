@@ -80,7 +80,7 @@ public class Main {
                 "--validateatmostonceperiod", "0",
                 "--leaktimeout", "0",
                 "--leakreclaim", "false",
-                "--creationretryattempts", "6",
+                "--creationretryattempts", "0", // This was 6 
                 "--creationretryinterval","10",
                 "--pooling", "true", 
                 "--statementtimeout", "-1",
