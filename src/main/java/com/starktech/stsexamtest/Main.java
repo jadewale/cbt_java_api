@@ -66,8 +66,8 @@ public class Main {
                 "--datasourceclassname", "com.mysql.jdbc.jdbc2.optional.MysqlDataSource",
                 "--restype", "javax.sql.DataSource",
                 "--driverClassName", "com.mysql.jdbc.Driver",
-                "--property", "user=b579248f3101c2:password=e9ca812d:databasename=heroku_5fff44d305e31ec:servername=us-cdbr-iron-east-04.cleardb.net:port=3306:ReconnectEnabled=true:ReconnectInterval=30000:autoReconnect=true:validationQuery=\"SELECT 1\":ReconnectAttempts=0",// was 6
-                "--wrapjdbcobjects","false", 
+                "--property", "user=b579248f3101c2:password=e9ca812d:databasename=heroku_5fff44d305e31ec:servername=us-cdbr-iron-east-04.cleardb.net:port=3306:ReconnectEnabled=true:ReconnectInterval=3000000:autoReconnect=true:validationQuery=\"SELECT 1\":ReconnectAttempts=6",//put 2 more zeroes in reconnect nterval
+                "--wrapjdbcobjects","false",
                 "--steadypoolsize", "8",
                 "--maxpoolsize", "32",
                 "--poolresize", "2",
