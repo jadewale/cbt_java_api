@@ -66,8 +66,8 @@ public class Main {
                 "--datasourceclassname", "com.mysql.jdbc.jdbc2.optional.MysqlDataSource",
                 "--restype", "javax.sql.DataSource",
                 "--driverClassName", "com.mysql.jdbc.Driver",
-                "--property", "user=b579248f3101c2:password=e9ca812d:databasename=heroku_5fff44d305e31ec:servername=us-cdbr-iron-east-04.cleardb.net:port=3306:ReconnectEnabled=true:ReconnectInterval=30000:autoReconnect=true:validationQuery=\"SELECT 1\":ReconnectAttempts=6",
-                "--wrapjdbcobjects","false",
+                "--property", "user=b579248f3101c2:password=e9ca812d:databasename=heroku_5fff44d305e31ec:servername=us-cdbr-iron-east-04.cleardb.net:port=3306:ReconnectEnabled=true:ReconnectInterval=30000:autoReconnect=true:validationQuery=\"SELECT 1\":ReconnectAttempts=0",// was 6
+                "--wrapjdbcobjects","false", 
                 "--steadypoolsize", "8",
                 "--maxpoolsize", "32",
                 "--poolresize", "2",
@@ -80,7 +80,7 @@ public class Main {
                 "--validateatmostonceperiod", "0",
                 "--leaktimeout", "0",
                 "--leakreclaim", "false",
-                "--creationretryattempts", "0", // This was 6 
+                "--creationretryattempts", "6", 
                 "--creationretryinterval","10",
                 "--pooling", "true", 
                 "--statementtimeout", "-1",
