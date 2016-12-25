@@ -61,7 +61,7 @@ public class Jwt implements Filter {
 
         System.out.println("I got hit the origin allowed should be in an ENV");  
         HttpServletResponse headers = (HttpServletResponse) response;
-        headers.addHeader("Access-Control-Allow-Origin", "https://node-cbt.herokuapp.com"); 
+        headers.addHeader("Access-Control-Allow-Origin", "https://node-cbt.herokuapp.com");
         headers.addHeader("Access-Control-Allow-Credentials", "true");
         headers.addHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
         headers.addHeader("Access-Control-Allow-Headers", "access-control-allow-headers, access-control-allow-origin, Content-Type");
