@@ -27,8 +27,13 @@ public class Main {
         try {
 
             GlassFishProperties gfProps = new GlassFishProperties();
-            gfProps.setPort("http-listener",
-                    Integer.parseInt(System.getenv("PORT")));
+            String port = System.getenv("PORT");
+
+            if (port != null) {
+                gfProps.setPort("http-listener", Integer.parseInt(port));
+            } else {
+                gfProps.setPort("http-listener", Integer.parseInt("8080")); 
+            }
             final GlassFish glassfish = GlassFishRuntime.bootstrap()
                     .newGlassFish(gfProps);
             glassfish.start();
@@ -67,12 +72,12 @@ public class Main {
                 "--restype", "javax.sql.DataSource",
                 "--driverClassName", "com.mysql.jdbc.Driver",
                 "--property", "user=b579248f3101c2:password=e9ca812d:databasename=heroku_5fff44d305e31ec:servername=us-cdbr-iron-east-04.cleardb.net:port=3306:ReconnectEnabled=true:ReconnectInterval=30000:autoReconnect=true:validationQuery=\"SELECT 1\":ReconnectAttempts=6",
-                "--wrapjdbcobjects","false",
-                "--steadypoolsize", "8",  
+                "--wrapjdbcobjects", "false",
+                "--steadypoolsize", "8",
                 "--maxpoolsize", "32",
                 "--poolresize", "2",
-                "--maxwait","60000",
-                "--idletimeout", "30", 
+                "--maxwait", "60000",
+                "--idletimeout", "30",
                 "--isisolationguaranteed", "true",
                 "--isconnectvalidatereq", "false",
                 "--failconnection", "false",
@@ -80,14 +85,14 @@ public class Main {
                 "--validateatmostonceperiod", "0",
                 "--leaktimeout", "0",
                 "--leakreclaim", "false",
-                "--creationretryattempts", "6", 
-                "--creationretryinterval","10",
-                "--pooling", "true", 
+                "--creationretryattempts", "6",
+                "--creationretryinterval", "10",
+                "--pooling", "true",
                 "--statementtimeout", "-1",
                 "--statementleaktimeout", "0",
                 "--statementleakreclaim", "false",
                 "--maxconnectionusagecount", "0",
-               /* "--associatewiththread", "false",
+                /* "--associatewiththread", "false",
                 "--wrapjdbcobjects", "true", 
                /* "--lazyconnectionenlistment", "false",
                 "--associatewiththread", "false",
@@ -109,7 +114,7 @@ public class Main {
                 "jdbc/myDatasource");
 
         System.out.println("------output of create jdbc: " + result.getOutput());
-    } 
+    }
 
     /*
      create-jdbc-connection-pool [--datasourceclassname=datasourceclassname] [--restype=restype]
