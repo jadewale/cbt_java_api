@@ -6,3 +6,8 @@
 ![Exam Summary](http://res.cloudinary.com/dd58mfinr/image/upload/v1528303767/Screen_Shot_2018-06-06_at_5.41.58_PM_ozunoe.png)
 ![Exam Candidates](http://res.cloudinary.com/dd58mfinr/image/upload/v1528303772/Screen_Shot_2018-06-06_at_5.42.09_PM_izw1w2.png)
 ![Exam Set Up](http://res.cloudinary.com/dd58mfinr/image/upload/v1528303769/Screen_Shot_2018-06-06_at_5.43.02_PM_cyx3e5.png)
+
+## Candidate Section
+
+![Candidiate Section](http://res.cloudinary.com/dd58mfinr/image/upload/v1528303761/Screen_Shot_2018-06-06_at_5.43.45_PM_hgf6b6.png)
+![Scheduled Exams](http://res.cloudinary.com/dd58mfinr/image/upload/v1528303764/Screen_Shot_2018-06-06_at_5.44.08_PM_hpq2pc.png)
